@@ -1,0 +1,126 @@
+import { Observable}  from "rxjs/Rx"
+import {Injectable }   from  "@angular/ core"
+import { Http, Response } from  "@angular/http"
+
+@Injectable()
+export class HttpClient {
+	
+	constructor( public http:Http)
+	{
+
+	}
+public fetchUsers() {
+	
+	return this.http
+		.get("/api/users")
+		.map(res :Response ) => res.json())
+}
+
+}
+
+______________________
+First way to Subscribe to an Observable:
+
+
+	 import { Component } from  "@angular/core"
+	 import { Observable } from "rxjs/Rx"
+	 //client 
+	 import { HttpClient }  from "../services/client "
+
+	 //Interface  
+	 import { IUser } from  "../services/interfaces"
+	 @Componnent (
+	 {
+	 selector : "user-list" ,
+	 templareUrl: "./template.html",
+	 })
+
+	 export class UserList {
+	 	public  users$: Observable<IUser[]>
+	 	constructor(
+	 		public client: HttpClient)
+	 		{
+	 			// fech users ...etc.
+	 		}
+	 	public ngOnInit(){
+	 		this.users$= this.client.fetchUsers()
+	 	}
+	 }
+
+	                  ****
+	  <!--  We use the async pipe to automatically subscribe/unsubscribe to our Observable 
+	  Note the $ sign, it's used for an Observable variable 	  -->
+	  <ul class="user__list" *ngIf="(users$ | async ).length">
+	  	<li class="user" *ngFor = "let user of users$ | async ">
+	  		{{user.nmae }}  - {{user.birth_date}}
+	  	</li>
+
+	  </ul>
+
+
+
+	  ____________________________
+	  second way to subscribe to Observable is don eby ourselves :   subscribe()
+
+	  this is can be handy if we would like to process data before disaplying it.
+
+	  import { Component } from "@angular/core"
+
+	  //client 
+	  import { HttpClient } from  "../services/client"
+	  //interface
+	  import {IUser }  from  "../services/interfaces"
+
+
+	  @Component({
+	  selector : "user-list",
+	  templateUrl: "./template.html",
+	  })
+	  export class UserList{
+
+	  	constructor(
+	  		public client : HttpClient
+	  		){}
+
+	  	public ngOnInit()
+	  	{
+	  		this.client.fetchUsers().subscribe(
+	  			(users : IUser[])=> {
+	  				// data processing)
+	  				this.users=users
+	  			})
+	  	}
+
+	  }
+
+
+	  __________
+	  observable are lazy 
+
+
+	  https://medium.com/codingthesmartway-com-blog/angular-5-service-worker-b722e571e306
+
+	  __________________
+
+	  https://www.youtube.com/watch?v=Sol2uLolmUM
+
+	  import {Observable }  from  "rxjs/observable";
+
+	  export function iniitObservable(){
+var keys$=Observable.fromEvenet(document, 'keyup')
+			.do((keyUp:KeyboardEvent) => console.log(keyUp.key));
+	keys$.subcribe();
+
+
+	  }
+
+
+
+
+	  ______
+	  References:
+	  https://angular-university.io/course/getting-started-with-angular2?utm=ytec-lm&nlt=Sign%20Up%20and%20Get%20This%20Free%20Course%2C%20plus%2025%20percent%20of%20all%20our%20Premium%20Courses%3A
+
+	  https://www.youtube.com/watch?v=ot_FrQbmEmU
+
+	  https://developer.telerik.com/topics/web-development/introduction-observables-angular-developers/
