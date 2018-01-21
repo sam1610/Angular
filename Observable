@@ -124,3 +124,7 @@ var keys$=Observable.fromEvenet(document, 'keyup')
 	  https://www.youtube.com/watch?v=ot_FrQbmEmU
 
 	  https://developer.telerik.com/topics/web-development/introduction-observables-angular-developers/
+	  
+	  
+	  
+	  https://ionicacademy.com/http-calls-ionic/
